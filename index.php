@@ -37,6 +37,101 @@ do_action( 'hestia_before_index_wrapper' ); ?>
 			$posts_to_skip = ( $paged === 1 ) ? apply_filters( 'hestia_filter_skipped_posts_in_main_loop', array() ) : array();
 
 			?>
+
+
+
+				
+			
+			
+			
+			<div id="carousel-container">
+				<img src="" id="random-image-1" style="z-order: 5; position: absolute; top: 0; left: 0; transition: opacity 1s ease; height: 0px; opacity: 1; border: #dddddd solid 5px; border-radius: 10px">
+                <img src="" id="random-image-2" style="z-order: 4; position: absolute; top: 0; left: 0; transition: opacity 1s ease; height: 0px; opacity: 0; border: #dddddd solid 5px; border-radius: 10px">
+                <img src="" id="random-image-3" style="z-order: 3; position: absolute; top: 0; left: 0; height: 0px; opacity: 0; border: #dddddd solid 5px; border-radius: 10px">
+            </div>
+			<br/>
+			<br/>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+
+                    IMAGE_COUNT = 149;
+
+                    var images = [];
+                    for (let index = 1; index < IMAGE_COUNT; index++) { 
+                        let name = '/wp-content/carousel/carousel' + index.toString().padStart(3, "0") + '.jpg';
+                        images.push(name);
+                    }
+
+                    var currentElementIdx = 0;
+                    var previousElementIdx = 1;
+                    var imageElements = [
+                        document.getElementById('random-image-1'),
+                        document.getElementById('random-image-2'),
+                        document.getElementById('random-image-3')
+                    ];
+
+                    var carouselcontainer = document.getElementById('carousel-container')
+
+                    var counter = 0;
+
+                    var previousNumbers = []
+
+                    function showRandomImage() {
+                        counter++;
+
+                        
+                        var newImg;
+                        var randomAttempts = 0;
+                        while (true) {
+                            randomAttempts++;
+                            newImg = Math.floor(Math.random() * IMAGE_COUNT - 1);
+                            if (randomAttempts > 3) break;
+                            if (!previousNumbers.includes(newImg)) {
+                                previousNumbers.push(newImg);
+                                break;
+                            }
+                        }
+                    
+                        var temp = currentElementIdx;
+                        currentElementIdx = previousElementIdx;
+                        previousElementIdx = temp;
+
+                        var newImageElement = imageElements[currentElementIdx];
+                        var oldImageElement = imageElements[previousElementIdx];
+                        var loadImageElement = imageElements[2];
+
+                        if (counter > 1) {
+                            newImageElement.src = loadImageElement.src;
+                        } else {
+                            newImageElement.src = images[newImg+1];
+                        }
+                        loadImageElement.src = images[newImg];
+                        newImageElement.style.opacity = 1;
+                        oldImageElement.style.opacity = 0;
+
+                        let w = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+
+                        newImageElement.style.width = w + "px";
+                        newImageElement.style.height = "auto";
+                        oldImageElement.style.width = w + "px";
+                        oldImageElement.style.height = "auto";
+                        var factor = 8;
+                        //if (w < 800) factor = 9;
+                        //if (w < 500) factor = 10;
+                        carouselcontainer.style.height = (w / 16 * factor) + "px";
+                    }
+                    setInterval(showRandomImage, 3000);
+                    showRandomImage(true);
+                });                                     
+            </script>
+			
+			
+			
+		
+			
+	
+
+			
 			<div class="row">
 				<?php
 				if ( $sidebar_layout === 'sidebar-left' ) {
